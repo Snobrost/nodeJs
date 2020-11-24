@@ -1,4 +1,5 @@
 const Post = require('../models/postModel');
+const request = require('request');
 
 exports.list_all_posts = (req, res) => {
     Post.find({}, (error, posts) => {
@@ -17,7 +18,21 @@ exports.list_all_posts = (req, res) => {
 
 exports.create_a_post = (req, res) => {
     let new_post = new Post(req.body);
+    if(!new_post.content){
+        const request = require('request');
 
+        request('https://loripsum.net/api/plaintext',  (err, res, body) => {
+        if (err) { 
+            res.status(500);
+            console.log(error);
+            res.json({
+                message: "Erreur serveur."
+            })
+        }
+        new_post.content = body.pre;
+        });
+        
+    }
     new_post.save((error, post) => {
         if (error) {
             res.status(500);

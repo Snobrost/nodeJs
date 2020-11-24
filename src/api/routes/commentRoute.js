@@ -1,7 +1,7 @@
 module.exports = (server) => {
     const commentController = require('../controllers/commentController');
 
-    server.route('/posts/:post_id/comments')
+    server.route('/posts/:post_id/comments') // req.params.post_id
         .get(commentController.list_all_comments)
         .post(commentController.create_a_comment);
 
