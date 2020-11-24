@@ -6,8 +6,6 @@ exports.verify_token = (req, res, next) => {
     let token = req.headers['authorization'];
 
     if(typeof token != 'undefined') {
-
-
         jwt.verify(token, JWT_SECRET, (error) => {
             if(error) {
                 res.sendStatus(403);

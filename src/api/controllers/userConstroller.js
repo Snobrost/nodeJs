@@ -27,9 +27,8 @@ exports.create_an_user = (req, res) => {
         console.log(error);
         res.json({
             message: "Email non conforme."
-        })
+        })   
     }
-    
 }
 
 exports.login_an_user = (req, res) => {

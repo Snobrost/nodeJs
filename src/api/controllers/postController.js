@@ -87,6 +87,7 @@ exports.get_a_post = (req, res) => {
     })
 }
 
+
 exports.update_a_post = (req, res) => {
     Post.findByIdAndUpdate(req.params.post_id, req.body, {
         new: true
