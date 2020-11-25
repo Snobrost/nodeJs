@@ -3,8 +3,7 @@ const Schema = mongoose.Schema;
 
 let commentSchema = new Schema({
     name: {
-        type: String,
-        required: "Le nom est requis"
+        type: String
     },
     message: {
         type: String,

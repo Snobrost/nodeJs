@@ -15,7 +15,7 @@ exports.list_all_posts = (req, res) => {
     })
 }
 
-const loremApiProvider = require('../providers/loremApiProvider');
+const loremApiProvider = require('../../providers/loremApiProvider');
 
 exports.create_a_post = async (req, res) => {
     let new_post = new Post(req.body);

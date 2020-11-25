@@ -23,3 +23,19 @@ exports.verify_token = (req, res, next) => {
         res.json({message: "Accès interdit"});
     }
 }
+
+
+exports.get_name = (req, res, next) => {
+    let token = req.headers['authorization'];
+
+    if(typeof token != 'undefined') {
+        return jwt.verify(token, JWT_SECRET );
+
+
+
+    }
+    else {
+        res.status(403);
+        res.json({message: "Accès interdit"});
+    }
+}

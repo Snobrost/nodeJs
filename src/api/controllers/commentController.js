@@ -1,5 +1,6 @@
 const Comment = require('../models/commentModel');
 const Post = require('../models/postModel');
+const jwtMiddleware = require('../../middleware/jwtMiddleware');
 
 exports.list_all_comments = (req, res) => {
     Comment.find({
@@ -27,9 +28,11 @@ exports.create_a_comment = (req, res) => {
             res.json({
                 message: "Erreur serveur."
             })
-        } else {
+        } else { 
+            
             // req.body.post = req.params.post_id;
             let new_comment = new Comment({
+                name: jwtMiddleware.get_name(req, res)['firstname'],
                 post_id: req.params.post_id,
                 ...req.body
             });

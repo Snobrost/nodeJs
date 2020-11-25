@@ -2,13 +2,10 @@ const User = require('../models/userModel');
 
 const jwt = require('jsonwebtoken');
 
-const validator = require("email-validator");
-
 exports.create_an_user = (req, res) => {
     let new_user = new User(req.body);
-    if(validator.validate(new_user.email)){
-        new_user.password = bcrypt.hashSync(new_user.password, process.env.JWT_SECRET);
-        new_user.save((error, user) => {
+
+    new_user.save((error, user) => {
         if (error) {
             res.status(500);
             console.log(error);
@@ -20,15 +17,8 @@ exports.create_an_user = (req, res) => {
             res.json({
                 message: `Utilisateur crée : ${user.email}`
             })
-            }
-        })
-    }else {
-        res.status(500);
-        console.log(error);
-        res.json({
-            message: "Email non conforme."
-        })   
-    }
+        }
+    })
 }
 
 exports.login_an_user = (req, res) => {
@@ -42,9 +32,10 @@ exports.login_an_user = (req, res) => {
                 message: "Erreur serveur."
             })
         } else {
-            if (bcrypt.compareSync(user.password, req.body.password)) {
+            if (user.password === req.body.password) {
                 jwt.sign({
                     email: user.email,
+                    firstname: user.firstname,
                     role: "user"
                 }, process.env.JWT_SECRET, {
                     expiresIn: '30 days'
