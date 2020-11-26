@@ -1,10 +1,11 @@
 const User = require('../models/userModel');
-
 const jwt = require('jsonwebtoken');
+const mdl = require('../../middleware/jwtMiddleware');
+
 
 exports.create_an_user = (req, res) => {
     let new_user = new User(req.body);
-
+    new_user.password =mdl.crypt_password(req);
     new_user.save((error, user) => {
         if (error) {
             res.status(500);
@@ -32,7 +33,7 @@ exports.login_an_user = (req, res) => {
                 message: "Erreur serveur."
             })
         } else {
-            if (user.password === req.body.password) {
+            if (user.password === mdl.crypt_password(req)) {
                 jwt.sign({
                     email: user.email,
                     firstname: user.firstname,

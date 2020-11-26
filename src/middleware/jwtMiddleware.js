@@ -1,4 +1,6 @@
 const jwt = require('jsonwebtoken');
+const bcrypt = require('bcryptjs');
+const bcryps = require('bcryptjs');
 
 const JWT_SECRET = process.env.JWT_SECRET;
 
@@ -38,4 +40,16 @@ exports.get_name = (req, res, next) => {
         res.status(403);
         res.json({message: "Accès interdit"});
     }
+}
+
+
+
+
+const salt = bcrypt.genSaltSync();
+
+exports.crypt_password = (req) => {
+
+    const encryptedPassword = bcrypt.hashSync(req.body.password, salt);
+    return encryptedPassword;
+    
 }
