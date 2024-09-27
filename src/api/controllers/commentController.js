@@ -1,7 +1,11 @@
-const comments = require('../models/commentsModel');
+const Comment = require('../models/commentModel');
+const Post = require('../models/postModel');
+const jwtMiddleware = require('../../middleware/jwtMiddleware');
 
 exports.list_all_comments = (req, res) => {
-    comments.find({}, (error, commentss) => {
+    Comment.find({
+        post_id: req.params.post_id
+    }, (error, comments) => {
         if (error) {
             res.status(500);
             console.log(error);
@@ -15,26 +19,44 @@ exports.list_all_comments = (req, res) => {
     })
 }
 
-exports.create_a_comments = (req, res) => {
-    let new_comments = new comments(req.body);
 
-    new_comments.save((error, comments) => {
+exports.create_a_comment = (req, res) => {
+    Post.findById(req.params.post_id, (error, post) => {
         if (error) {
             res.status(500);
             console.log(error);
             res.json({
                 message: "Erreur serveur."
             })
-        } else {
-            res.status(201);
-            res.json(comments)
+        } else { 
+            
+            // req.body.post = req.params.post_id;
+            let new_comment = new Comment({
+                name: jwtMiddleware.get_name(req, res)['firstname'],
+                post_id: req.params.post_id,
+                ...req.body
+            });
+            // new_comment.post_id = req.params.post_id;
+
+            new_comment.save((error, comment) => {
+                if (error) {
+                    res.status(500);
+                    console.log(error);
+                    res.json({
+                        message: "Erreur serveur."
+                    })
+                } else {
+                    res.status(201);
+                    res.json(comment)
+                }
+            })
         }
     })
+
 }
 
-exports.get_a_comments = (req, res) => {
-    // comments.find({_id: req.params.comments_id}, (error, comments) => {
-    comments.findById(req.params.comments_id, (error, comments) => {
+exports.get_a_comment = (req, res) => {
+    Comment.findById(req.params.comment_id, (error, comment) => {
         if (error) {
             res.status(500);
             console.log(error);
@@ -43,13 +65,15 @@ exports.get_a_comments = (req, res) => {
             })
         } else {
             res.status(200);
-            res.json(comments)
+            res.json(comment)
         }
     })
 }
 
-exports.update_a_comments = (req, res) => {
-    comments.findByIdAndUpdate(req.params.comments_id, req.body, {new: true}, (error, comments) => {
+exports.update_a_comment = (req, res) => {
+    Comment.findByIdAndUpdate(req.params.comment_id, req.body, {
+        new: true
+    }, (error, comment) => {
         if (error) {
             res.status(500);
             console.log(error);
@@ -58,14 +82,13 @@ exports.update_a_comments = (req, res) => {
             })
         } else {
             res.status(200);
-            res.json(comments)
+            res.json(comment)
         }
     })
 }
 
-exports.delete_a_comments = (req, res) => {
-    // comments.remove({_id: req.params.comments_id}, (error, comments) => {
-    comments.findByIdAndRemove(req.params.comments_id, (error, comments) => {
+exports.delete_a_comment = (req, res) => {
+    Comment.findByIdAndRemove(req.params.comment_id, (error) => {
         if (error) {
             res.status(500);
             console.log(error);
@@ -74,7 +97,9 @@ exports.delete_a_comments = (req, res) => {
             })
         } else {
             res.status(200);
-            res.json({message: "Article supprimé !"})
+            res.json({
+                message: "Commentaire supprimé !"
+            })
         }
     })
 }

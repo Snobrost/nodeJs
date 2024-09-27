@@ -3,8 +3,7 @@ const Schema = mongoose.Schema;
 
 let commentSchema = new Schema({
     name: {
-        type: String,
-        required: "Le nom est requis"
+        type: String
     },
     message: {
         type: String,
@@ -18,5 +17,6 @@ let commentSchema = new Schema({
         type: String
     }
 });
+
 
 module.exports = mongoose.model('Comment', commentSchema);
